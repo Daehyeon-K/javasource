@@ -1,9 +1,6 @@
 package test;
 
 public class Calculator {
+	private String st = null;
 	private int num1;
-	
-	private int num2;
-	
-	private int num3;
 }

@@ -124,4 +124,40 @@ public class BookDAO {
 		return flag;
 	}
 	
+	// 검색
+	// SEARCH : select * from bookTBL where code = ?;
+	// 			select * from bookTBL where writer like ?;
+	public List<BookDTO> searchList(String criteria, String keyword) {
+		List<BookDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "";
+		try {
+			if (criteria.equals("code")) {
+				sql = "select * from bookTBL where code = ?";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setInt(1, Integer.parseInt(keyword));
+			} else {
+				sql = "select * from bookTBL where writer like ?";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, "%"+keyword+"%");
+			}
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				BookDTO dto = new BookDTO(rs.getInt("code"), rs.getInt("price"), rs.getString("title"), rs.getString("writer"));
+				list.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				close(pstmt);
+				close(rs);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return list;
+	}
+	
 }

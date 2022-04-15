@@ -1,26 +1,25 @@
-package book.action;
+package book.service;
 
 import java.sql.Connection;
 
 import book.dao.BookDAO;
-import book.dto.BookDTO;
+
 import static book.dao.JdbcUtil.*;
 
-public class BookInsertService {
-	public boolean insertBook(BookDTO insertDto) {
-		
+public class BookUpdateService {
+	public boolean modify(int code, int price) {
 		// DB 작업
 		Connection con = getConnection();
 		BookDAO dao = new BookDAO(con);
-		boolean flag = dao.insert(insertDto);
+		boolean result = dao.update(code, price);
 		
-		if(flag) {
+		if(result) {
 			commit(con);
-		}else {
+		} else {
 			rollback(con);
 		}
 		close(con);
 		
-		return flag;
+		return result;
 	}
 }

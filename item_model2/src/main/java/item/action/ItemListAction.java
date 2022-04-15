@@ -1,35 +1,32 @@
-package book.action;
+package item.action;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import book.dto.BookDTO;
-import book.service.BookListService;
+import item.dto.ItemDTO;
+import item.service.ItemListService;
+import lombok.AllArgsConstructor;
 
-public class BookListAction implements Action {
+@AllArgsConstructor
+
+public class ItemListAction implements Action {
 
 	private String path;
 	
-	public BookListAction(String path) {
-		super();
-		this.path = path;
-	}
-
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// getParameter 작업 (가져올 거 없으면 패스)
+		// 읽는거는 가져올 거 없으니 패스
 		
 		// Service 작업 호출
-		BookListService service = new BookListService();
-		List<BookDTO> list = service.listAll();
+		ItemListService service = new ItemListService();
+		List<ItemDTO> list = service.listAll();
 		
 		// 이동 방식 관련
 		request.setAttribute("list", list);
 		
 		return new ActionForward(path, false);
-
 	}
-
 }

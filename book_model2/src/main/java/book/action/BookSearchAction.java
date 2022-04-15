@@ -6,30 +6,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import book.dto.BookDTO;
-import book.service.BookListService;
+import book.service.BookSearchService;
 
-public class BookListAction implements Action {
-
+public class BookSearchAction implements Action {
+	
 	private String path;
 	
-	public BookListAction(String path) {
+	public BookSearchAction(String path) {
 		super();
 		this.path = path;
 	}
 
 	@Override
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// getParameter 작업 (가져올 거 없으면 패스)
+		//getParameter
+		String criteria=request.getParameter("criteria"), keyword=request.getParameter("keyword");
 		
-		// Service 작업 호출
-		BookListService service = new BookListService();
-		List<BookDTO> list = service.listAll();
+		// service 호출
+		BookSearchService service = new BookSearchService();
+		List<BookDTO> list = service.search(criteria, keyword);
 		
-		// 이동 방식 관련
 		request.setAttribute("list", list);
 		
+		// 이동 경로 및 방식
+		
 		return new ActionForward(path, false);
-
 	}
 
 }

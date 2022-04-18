@@ -88,7 +88,93 @@ public class ItemDAO {
 	
 	
 	// UPDATE
+	public boolean update(int num, String psize, int price) {
+		boolean flag=false;
+		PreparedStatement pstmt = null;
+		String sql = "update item set psize = ?, price = ? where num = ?";
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, psize);
+			pstmt.setInt(2, price);
+			pstmt.setInt(3, num);
+			int result = pstmt.executeUpdate();
+			
+			if (result > 0) flag = true;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				close(pstmt);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return flag;
+	}
 	
 	
 	// DELETE
+	public boolean delete(int num) {
+		boolean flag = false;
+		PreparedStatement pstmt = null;
+		String sql = "delete from item where num = ?";
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			int result = pstmt.executeUpdate();
+			
+			if (result>0) flag = true;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				close(pstmt);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return flag;
+				
+	}
+	
+	
+	// SEARCH
+	public List<ItemDTO> searchList(String category, String name){
+		List<ItemDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select num, category, name, psize, price, register_at from item where category = ? and name like ?";
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, category);
+			pstmt.setString(2, "%"+name+"%");
+			
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				ItemDTO dto = new ItemDTO();
+				dto.setNum(rs.getInt("num"));
+				dto.setCategory(rs.getString("category"));
+				dto.setName(rs.getString("name"));
+				dto.setPsize(rs.getString("psize"));
+				dto.setPrice(rs.getInt("price"));
+				dto.setRegisterAt(rs.getDate("register_at"));
+				
+				list.add(dto);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				close(pstmt);
+				close(rs);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return list;
+	}
 }

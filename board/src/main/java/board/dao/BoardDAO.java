@@ -56,6 +56,77 @@ public class BoardDAO {
 		return flag;
 	}
 	
+	
+	// 게시글 삭제
+	public boolean delete(int bno, String password) {
+		boolean flag = false;
+		PreparedStatement pstmt = null;
+		String sql = "delete from board where bno = ? and password = ?";
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, bno);
+			pstmt.setString(2, password);
+			
+			int result = pstmt.executeUpdate();
+			
+			if(result>0) flag = true;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				close(pstmt);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return flag;
+	}
+	
+	
+	// 게시글 수정
+	public boolean updateArticle(BoardDTO updateDto) {
+		boolean flag = false;
+		PreparedStatement pstmt = null;
+		String sql = "";
+		
+		try {
+			if(updateDto.getAttach()!=null) {
+				sql = "update board set title=?, content=?, attach=? where bno = ? and password = ?";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, updateDto.getTitle());
+				pstmt.setString(2, updateDto.getContent());
+				pstmt.setString(3, updateDto.getAttach());
+				pstmt.setInt(4, updateDto.getBno());
+				pstmt.setString(5, updateDto.getPassword());
+			} else {
+				sql = "update board set title=?, content=? where bno = ? and password = ?";
+				pstmt = con.prepareStatement(sql);
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, updateDto.getTitle());
+				pstmt.setString(2, updateDto.getContent());
+				pstmt.setInt(3, updateDto.getBno());
+				pstmt.setString(4, updateDto.getPassword());
+			}
+			
+			
+			int result = pstmt.executeUpdate();
+			
+			if(result>0) flag = true;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				close(pstmt);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return flag;
+	}
+	
+	
 	// 게시글 전체 조회
 	public List<BoardDTO> listArticle(){
 		List<BoardDTO> list = new ArrayList<>();
@@ -87,5 +158,63 @@ public class BoardDAO {
 			}
 		}
 		return list;
+	}
+	
+	// 게시글 보기
+	public BoardDTO getRow(int bno) {
+		BoardDTO dto = new BoardDTO();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select name, title, content, attach from board where bno = ?";
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, bno);
+			
+			rs = pstmt.executeQuery();			
+			if(rs.next()) {
+				dto.setBno(bno);
+				dto.setName(rs.getString("name"));
+				dto.setTitle(rs.getString("title"));
+				dto.setContent(rs.getString("content"));
+				dto.setAttach(rs.getString("attach"));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				close(pstmt);
+				close(rs);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return dto;
+	}
+	
+	// 조회수 업데이트
+	public boolean hitUpdate(int bno) {
+		boolean flag = false;
+		PreparedStatement pstmt = null;
+		String sql = "update board set readcount = readcount+1 where bno = ?";
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, bno);
+			int result = pstmt.executeUpdate();
+			
+			if(result>0) flag = true;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				close(pstmt);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return flag;
+		
 	}
 }

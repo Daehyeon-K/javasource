@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import board.dto.BoardDTO;
-import board.service.BoardHitUpdateService;
 import board.service.BoardViewService;
 import lombok.AllArgsConstructor;
 

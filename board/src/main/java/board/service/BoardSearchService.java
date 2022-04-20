@@ -9,12 +9,13 @@ import board.dto.SearchDTO;
 
 import static board.dao.JdbcUtil.*;
 
-public class BoardListService {
-	public List<BoardDTO> list(SearchDTO searchDto){
+public class BoardSearchService {
+	public List<BoardDTO> search(SearchDTO searchDto){
+		
 		Connection con = getConnection();
 		BoardDAO dao = new BoardDAO(con);
 		
-		List<BoardDTO> list =  dao.listArticle(searchDto);
+		List<BoardDTO> list = dao.searchList(searchDto);
 		
 		close(con);
 		

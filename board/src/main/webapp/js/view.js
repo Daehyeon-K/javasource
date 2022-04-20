@@ -22,4 +22,12 @@
 		// submit 걸기
 		formObj.submit();
 	})
+	
+	$("#reply").click(function(){
+		// Form action 지정
+		formObj.attr("action", "/qReplyView.do");
+		
+		// submit 걸기
+		formObj.submit();
+	})
  })

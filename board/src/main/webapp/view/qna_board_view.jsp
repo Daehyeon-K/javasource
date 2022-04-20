@@ -35,7 +35,7 @@
 							<input type="file" name="attach" id="" />					
 						</c:if>
 						<c:if test="${!empty dto.attach}">				
-							 <a href="/view/download.jsp?fileName=${dto.attach}"></a>
+							 <a href="/view/download.jsp?fileName=${dto.attach}">${dto.attach}</a>
 						</c:if>
 					</div>
 				</div>
